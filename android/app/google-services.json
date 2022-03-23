@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "556864287536",
+    "firebase_url": "https://stray-dogs-c796b-default-rtdb.firebaseio.com",
+    "project_id": "stray-dogs-c796b",
+    "storage_bucket": "stray-dogs-c796b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556864287536:android:8832800995b8dd24208ef5",
+        "android_client_info": {
+          "package_name": "com.example.helloworld"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "556864287536-2djg1ikj70umae7uro7klac560c3pq1s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.helloworld",
+            "certificate_hash": "39eced2fd48da5736f2637a26b3908fb5c9bfca2"
+          }
+        },
+        {
+          "client_id": "556864287536-plojdfmfiqdr87nqs9oe321b27nb83ef.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.helloworld",
+            "certificate_hash": "35cc3a0efe22628aee0e486b6b8d808d99f6d797"
+          }
+        },
+        {
+          "client_id": "556864287536-vv2sm3mqdbdvtk4fgc82vhht6dvf9ir6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCBdFVmk2dfdS6hLXFRaYoCCEnyakuKvI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "556864287536-vv2sm3mqdbdvtk4fgc82vhht6dvf9ir6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
