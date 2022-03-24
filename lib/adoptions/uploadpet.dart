@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:helloworld/constants.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:path/path.dart';
 
 class uploadPetClass extends StatefulWidget {
   uploadPetClass({Key key}) : super(key: key);
@@ -142,20 +140,7 @@ class _uploadPetClassState extends State<uploadPetClass> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  child: const Tab(
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          'https://images.unsplash.com/photo-1507146426996-ef05306b995a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHVwcHklMjBkb2d8ZW58MHx8MHx8&w=1000&q=80'),
-                    ),
-                  ),
-                ),
-                Text(FirebaseAuth.instance.currentUser.displayName),
-              ],
-            ),
+            SizedBox(height: 40),
             Row(
               children: <Widget>[
                 Container(
@@ -164,35 +149,35 @@ class _uploadPetClassState extends State<uploadPetClass> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
                   child: TextField(
-                    controller: typecont,
-                    maxLines: null,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Type of animal e.g dog,cat etc.',
-                      fillColor: Color.fromARGB(255, 219, 219, 219),
-                      filled: true,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
-                Container(
-                  height: 100,
-                  width: 350,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
-                  child: TextField(
-                    controller: textcont,
-                    maxLines: null,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'description of animal',
-                      fillColor: Color.fromARGB(255, 219, 219, 219),
-                      filled: true,
-                    ),
-                  ),
+                      controller: typecont,
+                      maxLines: null,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide:
+                                  BorderSide(width: 5, color: Colors.white)),
+                          hintText: "Enter Pet type",
+                          hintStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 17,
+                              fontWeight: FontWeight.normal),
+                          errorStyle: TextStyle(
+                              color: Colors.red,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold),
+                          fillColor: constantclass.backgroundcolor,
+                          filled: true,
+                          suffixIcon: Container(
+                              alignment: Alignment.center,
+                              width: 63,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: Icon(
+                                Icons.pets,
+                                color: Colors.black,
+                              )))),
                 ),
               ],
             ),
@@ -204,15 +189,75 @@ class _uploadPetClassState extends State<uploadPetClass> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
                   child: TextField(
-                    controller: locationcont,
-                    maxLines: null,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'location of animal',
-                      fillColor: Color.fromARGB(255, 219, 219, 219),
-                      filled: true,
-                    ),
-                  ),
+                      controller: textcont,
+                      maxLines: null,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide:
+                                  BorderSide(width: 5, color: Colors.white)),
+                          hintText: "Description of animal",
+                          hintStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 17,
+                              fontWeight: FontWeight.normal),
+                          errorStyle: TextStyle(
+                              color: Colors.red,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold),
+                          fillColor: constantclass.backgroundcolor,
+                          filled: true,
+                          suffixIcon: Container(
+                              alignment: Alignment.center,
+                              width: 63,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: Icon(
+                                Icons.message,
+                                color: Colors.black,
+                              )))),
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Container(
+                  height: 100,
+                  width: 350,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
+                  child: TextField(
+                      controller: locationcont,
+                      maxLines: null,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide:
+                                  BorderSide(width: 5, color: Colors.white)),
+                          hintText: "Location of animal",
+                          hintStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 17,
+                              fontWeight: FontWeight.normal),
+                          errorStyle: TextStyle(
+                              color: Colors.red,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold),
+                          fillColor: constantclass.backgroundcolor,
+                          filled: true,
+                          suffixIcon: Container(
+                              alignment: Alignment.center,
+                              width: 63,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: Icon(
+                                Icons.place,
+                                color: Colors.black,
+                              )))),
                 ),
               ],
             ),
@@ -224,19 +269,39 @@ class _uploadPetClassState extends State<uploadPetClass> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 1),
                   child: TextField(
-                    controller: contactcont,
-                    maxLines: null,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(13),
-                    ],
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Your contact information',
-                      fillColor: Color.fromARGB(255, 219, 219, 219),
-                      filled: true,
-                    ),
-                  ),
+                      controller: contactcont,
+                      maxLines: null,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(13),
+                      ],
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide:
+                                  BorderSide(width: 5, color: Colors.white)),
+                          hintText: "Your contact information",
+                          hintStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 17,
+                              fontWeight: FontWeight.normal),
+                          errorStyle: TextStyle(
+                              color: Colors.red,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold),
+                          fillColor: constantclass.backgroundcolor,
+                          filled: true,
+                          suffixIcon: Container(
+                              alignment: Alignment.center,
+                              width: 63,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: Icon(
+                                Icons.contact_phone,
+                                color: Colors.black,
+                              )))),
                 ),
               ],
             ),
@@ -268,35 +333,45 @@ class _uploadPetClassState extends State<uploadPetClass> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 105, vertical: 5),
-                  child: ElevatedButton(
-                      style: OutlinedButton.styleFrom(
-                        shape: const StadiumBorder(),
-                        side: const BorderSide(width: 4, color: Colors.blue),
-                      ),
-                      onPressed: () {
-                        imgFromGallery(context);
-                      },
-                      child: const Text("Attach Image")),
+                RawMaterialButton(
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 300,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(15)),
+                    margin: EdgeInsets.only(left: 30, right: 30),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 105, vertical: 5),
+                    child: const Text("Attach Image"),
+                  ),
+                  onPressed: () {
+                    imgFromGallery(context);
+                  },
                 ),
               ],
             ),
+            SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 125, vertical: 5),
-                  child: ElevatedButton(
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(width: 2, color: Colors.blue),
-                      ),
-                      onPressed: () {
-                        uploadData(context);
-                      },
-                      child: const Text("Upload")),
+                RawMaterialButton(
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 300,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(15)),
+                    margin: EdgeInsets.only(left: 30, right: 30),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 105, vertical: 5),
+                    child: const Text("Upload Image"),
+                  ),
+                  onPressed: () {
+                    imgFromGallery(context);
+                  },
                 ),
               ],
             ),

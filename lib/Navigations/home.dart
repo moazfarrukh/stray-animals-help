@@ -27,18 +27,9 @@ class _homeclassState extends State<homeclass> {
   // Geolocator geolocator = Geolocator();
   splashscreen splashobj = splashscreen();
   logoutuser object = logoutuser();
-  _getCurrentLocation() async {
-    final geoposition = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-    setState(() {
-      currlatitude = '${geoposition.latitude}';
-      currlongitude = '${geoposition.longitude}';
-    });
-  }
 
   @override
   void initState() {
-    _getCurrentLocation();
     super.initState();
   }
 
