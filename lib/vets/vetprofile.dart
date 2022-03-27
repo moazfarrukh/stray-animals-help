@@ -7,14 +7,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 class vetprofileclass extends StatefulWidget {
   final QueryDocumentSnapshot doc;
-  vetprofileclass({Key key, @required this.doc}) : super(key: key);
+  Map userloc;
+  vetprofileclass({Key key, @required this.doc, this.userloc})
+      : super(key: key);
   @override
-  _vetprofileclassState createState() => _vetprofileclassState(doc: doc);
+  _vetprofileclassState createState() => _vetprofileclassState();
 }
 
 class _vetprofileclassState extends State<vetprofileclass> {
-  final QueryDocumentSnapshot doc;
-  _vetprofileclassState({Key key, this.doc});
   String _url = "https://www.google.com/maps/dir//";
 
   @override
@@ -46,22 +46,13 @@ class _vetprofileclassState extends State<vetprofileclass> {
                 child: Column(
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CircleAvatar(
-                          radius: 40,
+                          radius: 60,
                           backgroundImage: NetworkImage(
                               'https://thumbs.dreamstime.com/b/homeless-shelter-real-estate-concept-close-up-child-hands-holding-white-paper-house-heart-green-background-flat-lay-copy-164579567.jpg'),
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //name of vet as per database
-                            //location of vet as per database
-                          ],
-                        )
                       ],
                     ),
                     SizedBox(height: 20),
@@ -69,36 +60,58 @@ class _vetprofileclassState extends State<vetprofileclass> {
                       shrinkWrap: true,
                       children: [
                         Text(
-                          doc.get('name'),
+                          widget.doc.get('name') ?? '',
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 15,
                         ),
                         Text(
-                          doc.get('location'),
+                          "Location",
                           style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.normal),
-                        ),
-                        Text(
-                          doc.get('contact') ?? '',
-                          style: TextStyle(
+                              decoration: TextDecoration.underline,
                               color: Colors.black,
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
                         ),
                         SizedBox(
                           height: 10,
                         ),
                         Text(
-                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+                          widget.doc.get('location').trim() ?? '',
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: 18,
+                              fontSize: 20,
                               fontWeight: FontWeight.normal),
-                          textAlign: TextAlign.left,
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Contact",
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          widget.doc.get('contact') ?? '',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.normal),
+                          textAlign: TextAlign.center,
                         ),
                       ],
                     )
@@ -126,8 +139,7 @@ class _vetprofileclassState extends State<vetprofileclass> {
                         )),
                   ),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => vetsclass()));
+                    Navigator.of(context).pop();
                   },
                 ),
                 RawMaterialButton(
@@ -148,8 +160,8 @@ class _vetprofileclassState extends State<vetprofileclass> {
                   ),
                   onPressed: () {
                     launch(
-                      Uri.encodeFull(
-                          _url + doc.get('location').replaceAll(' ', '+')),
+                      Uri.encodeFull(_url +
+                          widget.doc.get('location').replaceAll(' ', '+')),
                     );
                   },
                 )

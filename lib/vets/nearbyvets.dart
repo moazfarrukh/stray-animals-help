@@ -12,6 +12,8 @@ import 'dart:ui' as ui;
 import 'dart:typed_data';
 
 class vetsclass extends StatefulWidget {
+  Map userloc;
+  vetsclass({Key key, this.userloc}) : super(key: key);
   @override
   _vetsclassState createState() => _vetsclassState();
 }
@@ -20,22 +22,15 @@ class _vetsclassState extends State<vetsclass> {
   final db = FirebaseFirestore.instance;
   bool isloading = false;
   String search = " ";
-  double currlatitude = 0;
-  double currlongitude = 0;
+
   TextEditingController searchcont = TextEditingController();
   BitmapDescriptor mapmarker;
   Set<Marker> _markers = {};
-
-  _getCurrentLocation() async {
-    final geoposition = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-    setState(() {
-      currlatitude = geoposition.latitude;
-      currlongitude = geoposition.longitude;
-    });
+  void addUserLoc() {
     _markers.add(Marker(
         markerId: MarkerId('userloc'),
-        position: LatLng(currlatitude, currlongitude),
+        position:
+            LatLng(widget.userloc["latitude"], widget.userloc["longitude"]),
         infoWindow: InfoWindow(title: "your Location")));
   }
 
@@ -89,7 +84,7 @@ class _vetsclassState extends State<vetsclass> {
   void initState() {
     super.initState();
     markericon();
-    _getCurrentLocation();
+    addUserLoc();
     _onMapCreated();
   }
 
@@ -116,7 +111,9 @@ class _vetsclassState extends State<vetsclass> {
             child: TextField(
               keyboardType: TextInputType.text,
               onSubmitted: (String a) {
-                search = a;
+                setState(() {
+                  search = a;
+                });
               },
               controller: searchcont,
               decoration: InputDecoration(
@@ -163,7 +160,9 @@ class _vetsclassState extends State<vetsclass> {
                     ].toSet(),
                     markers: _markers,
                     initialCameraPosition: CameraPosition(
-                        target: LatLng(currlatitude, currlongitude), zoom: 10),
+                        target: LatLng(widget.userloc["latitude"],
+                            widget.userloc["longitude"]),
+                        zoom: 13),
                   )
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -185,70 +184,146 @@ class _vetsclassState extends State<vetsclass> {
           SizedBox(
             height: 20,
           ),
-          StreamBuilder<QuerySnapshot>(
-              stream: db.collection('vets').snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                      child: Text("No data",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 25,
-                              fontWeight: FontWeight.w500)));
-                } else {
-                  return ListView(
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    children: []..addAll(snapshot.data.docs.map((doc) {
-                        return Column(children: [
-                          RawMaterialButton(
-                            child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    color: constantclass.backgroundcolor,
-                                    borderRadius: BorderRadius.circular(20)),
-                                height: 92,
-                                width: double.infinity,
-                                margin: EdgeInsets.only(left: 30, right: 30),
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    radius: 40,
-                                    backgroundImage: NetworkImage(
-                                        'https://thumbs.dreamstime.com/b/homeless-shelter-real-estate-concept-close-up-child-hands-holding-white-paper-house-heart-green-background-flat-lay-copy-164579567.jpg'),
-                                  ),
-                                  title: Text(
-                                    doc.get('name') ?? '',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    doc.get('location') ?? '',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 15,
-                                        overflow: TextOverflow.ellipsis),
-                                  ),
-                                )),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          vetprofileclass(doc: doc)));
-                            },
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                        ]);
-                      })),
-                  );
-                }
-              }),
+          (search.trim() != "")
+              ? StreamBuilder<QuerySnapshot>(
+                  stream: db
+                      .collection('vets')
+                      .where('name',
+                          isGreaterThanOrEqualTo: search,
+                          isLessThan: search + 'z')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                          child: Text("No data",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w500)));
+                    } else {
+                      return ListView(
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        children: []..addAll(snapshot.data.docs.map((doc) {
+                            return Column(children: [
+                              RawMaterialButton(
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        color: constantclass.backgroundcolor,
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    height: 92,
+                                    width: double.infinity,
+                                    margin:
+                                        EdgeInsets.only(left: 30, right: 30),
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                        radius: 40,
+                                        backgroundImage: NetworkImage(
+                                            'https://thumbs.dreamstime.com/b/homeless-shelter-real-estate-concept-close-up-child-hands-holding-white-paper-house-heart-green-background-flat-lay-copy-164579567.jpg'),
+                                      ),
+                                      title: Text(
+                                        doc.get('name') ?? '',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        doc.get('location') ?? '',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                    )),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => vetprofileclass(
+                                              doc: doc,
+                                              userloc: widget.userloc)));
+                                },
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                            ]);
+                          })),
+                      );
+                    }
+                  })
+              : StreamBuilder<QuerySnapshot>(
+                  stream: db.collection('vets').snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                          child: Text("No data",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w500)));
+                    } else {
+                      return ListView(
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        children: []..addAll(snapshot.data.docs.map((doc) {
+                            return Column(children: [
+                              RawMaterialButton(
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        color: constantclass.backgroundcolor,
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    height: 92,
+                                    width: double.infinity,
+                                    margin:
+                                        EdgeInsets.only(left: 30, right: 30),
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                        radius: 40,
+                                        backgroundImage: NetworkImage(
+                                            'https://thumbs.dreamstime.com/b/homeless-shelter-real-estate-concept-close-up-child-hands-holding-white-paper-house-heart-green-background-flat-lay-copy-164579567.jpg'),
+                                      ),
+                                      title: Text(
+                                        doc.get('name') ?? '',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        doc.get('location') ?? '',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                    )),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => vetprofileclass(
+                                              doc: doc,
+                                              userloc: widget.userloc)));
+                                },
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                            ]);
+                          })),
+                      );
+                    }
+                  }),
         ])));
   }
 }

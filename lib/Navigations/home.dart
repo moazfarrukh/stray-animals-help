@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:helloworld/Navigations/tips.dart';
 import 'package:helloworld/adoptions/adopt.dart';
 import 'package:helloworld/adoptions/adoptsearches.dart';
 import 'package:helloworld/Navigations/login.dart';
@@ -20,16 +21,25 @@ class homeclass extends StatefulWidget {
 }
 
 class _homeclassState extends State<homeclass> {
-  Position _currentPosition;
-  String _currentAddress;
-  String currlatitude = " ";
-  String currlongitude = " ";
+  Map loc = {
+    "latitude": 0.0,
+    "longitude": 0.0,
+  };
   // Geolocator geolocator = Geolocator();
   splashscreen splashobj = splashscreen();
   logoutuser object = logoutuser();
+  _getCurrentLocation() async {
+    final geoposition = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    setState(() {
+      loc["latitude"] = geoposition.latitude;
+      loc["longitude"] = geoposition.longitude;
+    });
+  }
 
   @override
   void initState() {
+    _getCurrentLocation();
     super.initState();
   }
 
@@ -61,37 +71,37 @@ class _homeclassState extends State<homeclass> {
                       fontWeight: FontWeight.bold),
                 ),
               ))),
-      endDrawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text('Drawer Header'),
-            ),
-            ListTile(
-              title: const Text('Item 1'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-            ListTile(
-              title: const Text('Item 2'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-          ],
-        ),
-      ),
+      // endDrawer: Drawer(
+      //   // Add a ListView to the drawer. This ensures the user can scroll
+      //   // through the options in the drawer if there isn't enough vertical
+      //   // space to fit everything.
+      //   child: ListView(
+      //     // Important: Remove any padding from the ListView.
+      //     padding: EdgeInsets.zero,
+      //     children: [
+      //       const DrawerHeader(
+      //         decoration: BoxDecoration(
+      //           color: Colors.blue,
+      //         ),
+      //         child: Text('Drawer Header'),
+      //       ),
+      //       ListTile(
+      //         title: const Text('Item 1'),
+      //         onTap: () {
+      //           // Update the state of the app.
+      //           // ...
+      //         },
+      //       ),
+      //       ListTile(
+      //         title: const Text('Item 2'),
+      //         onTap: () {
+      //           // Update the state of the app.
+      //           // ...
+      //         },
+      //       ),
+      //     ],
+      //   ),
+      // ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -122,7 +132,7 @@ class _homeclassState extends State<homeclass> {
               ],
             ),
             SizedBox(
-              height: 20,
+              height: 50,
             ),
             Row(
               children: [
@@ -156,15 +166,18 @@ class _homeclassState extends State<homeclass> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => shelterclass()));
+                              builder: (context) =>
+                                  shelterclass(userloc: loc)));
                     }),
                 SizedBox(
                   width: 5,
                 ),
                 RawMaterialButton(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => vetsclass()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => vetsclass(userloc: loc)));
                     },
                     child: Container(
                       width: 170,
@@ -194,7 +207,7 @@ class _homeclassState extends State<homeclass> {
               ],
             ),
             SizedBox(
-              height: 15,
+              height: 60,
             ),
             Row(
               children: [
@@ -230,6 +243,36 @@ class _homeclassState extends State<homeclass> {
                         ],
                       ),
                     )),
+                RawMaterialButton(
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => tipsclass()));
+                    },
+                    child: Container(
+                      width: 170,
+                      height: 122,
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(left: 15),
+                      decoration: BoxDecoration(
+                          color: constantclass.backgroundcolor,
+                          borderRadius: BorderRadius.circular(30)),
+                      child: Column(
+                        children: [
+                          Image(
+                            image: AssetImage('assets/images/tips.png'),
+                            width: 46,
+                            height: 83,
+                          ),
+                          Text(
+                            "Tips",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 18),
+                          )
+                        ],
+                      ),
+                    ))
               ],
             ),
           ],

@@ -12,6 +12,9 @@ import 'dart:ui' as ui;
 import 'dart:typed_data';
 
 class shelterclass extends StatefulWidget {
+  Map userloc;
+  shelterclass({Key key, this.userloc}) : super(key: key);
+
   @override
   _shelterclassState createState() => _shelterclassState();
 }
@@ -19,23 +22,16 @@ class shelterclass extends StatefulWidget {
 class _shelterclassState extends State<shelterclass> {
   final db = FirebaseFirestore.instance;
   bool isloading = false;
-  String search = " ";
-  double currlatitude = 0;
-  double currlongitude = 0;
+  String search = "";
   TextEditingController searchcont = TextEditingController();
   BitmapDescriptor mapmarker;
   Set<Marker> _markers = {};
 
-  _getCurrentLocation() async {
-    final geoposition = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-    setState(() {
-      currlatitude = geoposition.latitude;
-      currlongitude = geoposition.longitude;
-    });
+  addUserloc() async {
     _markers.add(Marker(
         markerId: MarkerId('userloc'),
-        position: LatLng(currlatitude, currlongitude),
+        position:
+            LatLng(widget.userloc["latitude"], widget.userloc["longitude"]),
         infoWindow: InfoWindow(title: "your Location")));
   }
 
@@ -63,16 +59,13 @@ class _shelterclassState extends State<shelterclass> {
             for (int i = 0; i < snapshot.docs.length; i++) {
               Map<dynamic, dynamic> map = snapshot.docs[i].data();
               var id = snapshot.docs[i].id;
-              print(id);
               _markers.add(Marker(
                   icon: mapmarker,
                   markerId: MarkerId(id),
                   position: LatLng(map['latitude'], map['longitude']),
                   infoWindow: InfoWindow(title: map["name"])));
             }
-            print('done');
             loadProgress(true);
-            print(_markers.toString());
           }
         });
       },
@@ -89,7 +82,7 @@ class _shelterclassState extends State<shelterclass> {
   void initState() {
     super.initState();
     markericon();
-    _getCurrentLocation();
+    addUserloc();
     _onMapCreated();
   }
 
@@ -116,7 +109,9 @@ class _shelterclassState extends State<shelterclass> {
             child: TextField(
               keyboardType: TextInputType.text,
               onSubmitted: (String a) {
-                search = a;
+                setState(() {
+                  search = a;
+                });
               },
               controller: searchcont,
               decoration: InputDecoration(
@@ -163,7 +158,9 @@ class _shelterclassState extends State<shelterclass> {
                     ].toSet(),
                     markers: _markers,
                     initialCameraPosition: CameraPosition(
-                        target: LatLng(currlatitude, currlongitude), zoom: 10),
+                        target: LatLng(widget.userloc['latitude'],
+                            widget.userloc['longitude']),
+                        zoom: 13),
                   )
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -185,70 +182,148 @@ class _shelterclassState extends State<shelterclass> {
           SizedBox(
             height: 20,
           ),
-          StreamBuilder<QuerySnapshot>(
-              stream: db.collection('shelters').snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                      child: Text("No data",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 25,
-                              fontWeight: FontWeight.w500)));
-                } else {
-                  return ListView(
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    children: []..addAll(snapshot.data.docs.map((doc) {
-                        return Column(children: [
-                          RawMaterialButton(
-                            child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    color: constantclass.backgroundcolor,
-                                    borderRadius: BorderRadius.circular(20)),
-                                height: 92,
-                                width: double.infinity,
-                                margin: EdgeInsets.only(left: 30, right: 30),
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    radius: 40,
-                                    backgroundImage: NetworkImage(
-                                        'https://thumbs.dreamstime.com/b/homeless-shelter-real-estate-concept-close-up-child-hands-holding-white-paper-house-heart-green-background-flat-lay-copy-164579567.jpg'),
-                                  ),
-                                  title: Text(
-                                    doc.get('name') ?? '',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    doc.get('location') ?? '',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 15,
-                                        overflow: TextOverflow.ellipsis),
-                                  ),
-                                )),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          shelterprofileclass(doc: doc)));
-                            },
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                        ]);
-                      })),
-                  );
-                }
-              }),
+          (search.trim() != "")
+              ? StreamBuilder<QuerySnapshot>(
+                  stream: db
+                      .collection('shelters')
+                      .where('name',
+                          isGreaterThanOrEqualTo: searchcont.text,
+                          isLessThan: searchcont.text + 'z')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                          child: Text("No data",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w500)));
+                    } else {
+                      return ListView(
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        children: []..addAll(snapshot.data.docs.map((doc) {
+                            return Column(children: [
+                              RawMaterialButton(
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        color: constantclass.backgroundcolor,
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    height: 92,
+                                    width: double.infinity,
+                                    margin:
+                                        EdgeInsets.only(left: 30, right: 30),
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                        radius: 40,
+                                        backgroundImage: NetworkImage(
+                                            'https://thumbs.dreamstime.com/b/homeless-shelter-real-estate-concept-close-up-child-hands-holding-white-paper-house-heart-green-background-flat-lay-copy-164579567.jpg'),
+                                      ),
+                                      title: Text(
+                                        doc.get('name') ?? '',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        doc.get('location') ?? '',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                    )),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              shelterprofileclass(
+                                                  doc: doc,
+                                                  userloc: widget.userloc)));
+                                },
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                            ]);
+                          })),
+                      );
+                    }
+                  })
+              : StreamBuilder<QuerySnapshot>(
+                  stream: db.collection('shelters').snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                          child: Text("No data",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w500)));
+                    } else {
+                      return ListView(
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        children: []..addAll(snapshot.data.docs.map((doc) {
+                            return Column(children: [
+                              RawMaterialButton(
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        color: constantclass.backgroundcolor,
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    height: 92,
+                                    width: double.infinity,
+                                    margin:
+                                        EdgeInsets.only(left: 30, right: 30),
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                        radius: 40,
+                                        backgroundImage: NetworkImage(
+                                            'https://thumbs.dreamstime.com/b/homeless-shelter-real-estate-concept-close-up-child-hands-holding-white-paper-house-heart-green-background-flat-lay-copy-164579567.jpg'),
+                                      ),
+                                      title: Text(
+                                        doc.get('name') ?? '',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        doc.get('location') ?? '',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15,
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                    )),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              shelterprofileclass(
+                                                  doc: doc,
+                                                  userloc: widget.userloc)));
+                                },
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                            ]);
+                          })),
+                      );
+                    }
+                  }),
         ])));
   }
 }

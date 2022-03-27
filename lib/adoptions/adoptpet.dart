@@ -50,9 +50,10 @@ class _petItclassState extends State<petItclass> {
               child: Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CircleAvatar(
-                        radius: 40,
+                        radius: 60,
                         backgroundImage: NetworkImage(doc
                                 .data()
                                 .toString()
@@ -60,49 +61,6 @@ class _petItclassState extends State<petItclass> {
                             ? doc.get('url')
                             : 'https://dm6g3jbka53hp.cloudfront.net/static-images/adopt-me-pet-02032021.jpg'),
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "<Animal name>",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.normal),
-                          ), //name as per database
-                          Text(
-                            "<Location>",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.normal),
-                          ), //location  as per database
-                          Text(
-                            "<Age>",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.normal),
-                          ), //Age as per database
-                          Text(
-                            "<Age>",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.normal),
-                          ), //breed as per database
-                          Text(
-                            "<Description>",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontWeight: FontWeight.normal),
-                          ), //description as per database
-                        ],
-                      )
                     ],
                   ),
                   SizedBox(height: 20),
@@ -116,13 +74,14 @@ class _petItclassState extends State<petItclass> {
                             color: Colors.black,
                             fontSize: 20,
                             fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
                       ),
                       SizedBox(
                         height: 10,
                       ),
                       Text(
                         doc.get('shelter-attention')
-                            ? "Shelter Attention Required is required for this ${doc.get('type')}"
+                            ? "Shelter attention  is required for this ${doc.get('type')}"
                             : "",
                         style: TextStyle(
                             color: Colors.black,
@@ -134,12 +93,36 @@ class _petItclassState extends State<petItclass> {
                         height: 10,
                       ),
                       Text(
+                        "Location",
+                        style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
                         doc.get('location'),
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.normal),
-                        textAlign: TextAlign.left,
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Description",
+                        style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.center,
                       ),
                       SizedBox(
                         height: 10,
@@ -150,7 +133,19 @@ class _petItclassState extends State<petItclass> {
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.normal),
-                        textAlign: TextAlign.left,
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Contact",
+                        style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.center,
                       ),
                       SizedBox(
                         height: 10,
@@ -161,7 +156,7 @@ class _petItclassState extends State<petItclass> {
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.normal),
-                        textAlign: TextAlign.left,
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   )

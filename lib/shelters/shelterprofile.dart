@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:helloworld/constants.dart';
 import 'package:helloworld/shelters/shelter.dart';
@@ -7,15 +8,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 class shelterprofileclass extends StatefulWidget {
   final QueryDocumentSnapshot doc;
-  shelterprofileclass({Key key, @required this.doc}) : super(key: key);
+  Map userloc;
+  shelterprofileclass({Key key, @required this.doc, this.userloc})
+      : super(key: key);
   @override
-  _shelterprofileclassState createState() =>
-      _shelterprofileclassState(doc: doc);
+  _shelterprofileclassState createState() => _shelterprofileclassState();
 }
 
 class _shelterprofileclassState extends State<shelterprofileclass> {
-  final QueryDocumentSnapshot doc;
-  _shelterprofileclassState({Key key, this.doc});
   String _url = "https://www.google.com/maps/dir//";
 
   @override
@@ -47,9 +47,10 @@ class _shelterprofileclassState extends State<shelterprofileclass> {
                 child: Column(
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CircleAvatar(
-                          radius: 40,
+                          radius: 60,
                           backgroundImage: NetworkImage(
                               'https://thumbs.dreamstime.com/b/homeless-shelter-real-estate-concept-close-up-child-hands-holding-white-paper-house-heart-green-background-flat-lay-copy-164579567.jpg'),
                         ),
@@ -70,36 +71,58 @@ class _shelterprofileclassState extends State<shelterprofileclass> {
                       shrinkWrap: true,
                       children: [
                         Text(
-                          doc.get('name') ?? '',
+                          widget.doc.get('name') ?? '',
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 15,
                         ),
                         Text(
-                          doc.get('location') ?? '',
+                          "Location",
                           style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.normal),
-                        ),
-                        Text(
-                          doc.get('contact') ?? '',
-                          style: TextStyle(
+                              decoration: TextDecoration.underline,
                               color: Colors.black,
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
                         ),
                         SizedBox(
                           height: 10,
                         ),
                         Text(
-                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+                          widget.doc.get('location').trim() ?? '',
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: 18,
+                              fontSize: 20,
                               fontWeight: FontWeight.normal),
-                          textAlign: TextAlign.left,
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Contact",
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          widget.doc.get('contact') ?? '',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.normal),
+                          textAlign: TextAlign.center,
                         ),
                       ],
                     )
@@ -127,10 +150,7 @@ class _shelterprofileclassState extends State<shelterprofileclass> {
                         )),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => shelterclass()));
+                    Navigator.of(context).pop();
                   },
                 ),
                 RawMaterialButton(
@@ -151,8 +171,8 @@ class _shelterprofileclassState extends State<shelterprofileclass> {
                   ),
                   onPressed: () {
                     launch(
-                      Uri.encodeFull(
-                          _url + doc.get('location').replaceAll(' ', '+')),
+                      Uri.encodeFull(_url +
+                          widget.doc.get('location').replaceAll(' ', '+')),
                     );
                   },
                 )
