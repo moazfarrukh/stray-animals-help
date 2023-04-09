@@ -3,8 +3,11 @@
 PawFinder is  a mobile app that facilitates stray animals in getting veterinarian care, shelter and possibly a place to call a home. This app  was developed using Flutter and Firebase for its backend and as a database. It utilizes Google Maps API for displaying the location of the nearest Shelters and Vertinarian clinics.
 ## Installation
 Clone the git repository to your device
+
 Open the project in Android Studio
+
 Build the app and run it on your device or virtual emulator
+
 ## Usage
 Using it is intuitive and straight forward you can easily navigate through different screens
 #### Home Screen
