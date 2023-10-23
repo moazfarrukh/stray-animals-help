@@ -16,5 +16,5 @@ Using it is intuitive and straight forward you can easily navigate through diffe
 #### Shelters
 <img src="https://user-images.githubusercontent.com/21291203/230772954-da59a3a4-5530-430b-9e70-75d5cb83295d.png" alt="Shelters" width="200" height="400"/>
 
-#### Upload Animal 
+#### Upload Animal details for Adoption 
 <img src="https://user-images.githubusercontent.com/21291203/230772976-cad2224c-8e73-430b-9102-9e8f21cbb4c3.png" alt="Animals" width="200" height="400"/>
